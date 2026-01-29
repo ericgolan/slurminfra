@@ -1,0 +1,35 @@
+#!ipxe
+
+# Define variables for easy maintenance
+set server_ip 50.50.50.1
+set base_url http://${server_ip}/rocky9
+set menu-timeout 10000
+
+:start
+menu PXE Boot Menu - Rocky 9 Production Lab
+item --gap --             ------------------------- OS Installers -------------------------
+item rocky9               Install Rocky Linux 9 (Automated)
+item --gap --             ------------------------- Tools -------------------------
+item shell                 iPXE Shell
+item exit                  Exit and Boot from Local Drive
+choose --default exit --timeout ${menu-timeout} target && goto ${target}
+
+:rocky9
+echo Loading Rocky Linux 9 Kernel...
+
+# TUNED: inst.repo now points to the root (where .treeinfo is) 
+# This ensures access to BOTH BaseOS and AppStream packages.
+kernel ${base_url}/images/pxeboot/vmlinuz inst.repo=${base_url} inst.stage2=${base_url} inst.ks=${base_url}/ks.cfg ip=dhcp devfs=nomconf inst.ks.sendmac || goto error
+initrd ${base_url}/images/pxeboot/initrd.img || goto error
+boot || goto error
+
+:shell
+shell
+
+:exit
+exit
+
+:error
+echo An error occurred during the boot process.
+echo Check the Infra machine logs: tail -f /var/log/httpd/access_log
+shell

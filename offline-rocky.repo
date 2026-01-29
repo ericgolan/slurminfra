@@ -1,0 +1,18 @@
+[Offline-baseos]
+name=Offline BaseOS
+baseurl=file:///var/www/html/repos/rocky9/baseos
+gpgcheck=0
+enabled=1
+
+[Offline-appstream]
+name=Offline AppStream
+baseurl=file:///var/www/html/repos/rocky9/appstream
+gpgcheck=0
+enabled=1
+
+[Offline-epel]
+name=Offline EPEL
+baseurl=file:///var/www/html/repos/rocky9/epel
+enabled=1
+gpgcheck=0
+
